@@ -22,12 +22,12 @@ class DataTransformation:
         self.data_transformation_config = DataTransformationConfig()
     def get_data_transformer_object(self):
         try:
-            num_features=['reading_score','writing_score']
-            cat_features=['gender','race/ethnicity','parental_level_of_education','lunch','test_preparation_course']
+            num_features=['reading score','writing score']
+            cat_features=['gender','race/ethnicity','parental level of education','lunch','test preparation course']
 
             num_pipeline=Pipeline(
                 steps= [
-                ('imputer',SimpleImputer(Strategy='median')),
+                ('imputer',SimpleImputer(strategy='median')),
                 ('scaler', StandardScaler()) 
                 ]
 
@@ -35,9 +35,9 @@ class DataTransformation:
 
             cat_pipeline=Pipeline(
                 steps= [
-                ('imputer',SimpleImputer(Strategy='median')),
+                ('imputer',SimpleImputer(strategy='most_frequent')),
                 ('onehotencoder',OneHotEncoder()),
-                ('scaler', StandardScaler())
+                ('scaler', StandardScaler(with_mean=False))
                 ]
 
             )
@@ -60,15 +60,16 @@ class DataTransformation:
         return preprocessor
     
 
-    def initiate_data_transformation(self,train_path,test_path)
+    def initiate_data_transformation(self,train_path,test_path):
         try:
             train_df=pd.read_csv(train_path)
             test_df=pd.read_csv(test_path)
-            input_features_train_data=train_df.drop(columns=['math_score'],axis=1)
-            target_feature_train_data=train_df['math_score']
+            target_feature_train_data=train_df['math score']
+            input_features_train_data=train_df.drop(columns=['math score'],axis=1)
+            
 
-            input_features_test_data=test_df.drop(columns=['math_score'],axis=1)
-            target_feature_test_data=test_df['math_score']
+            input_features_test_data=test_df.drop(columns=['math score'],axis=1)
+            target_feature_test_data=test_df['math score']
             logging.info('Read train and test data completed')
 
             preprocessing_obj=self.get_data_transformer_object()
@@ -91,7 +92,7 @@ class DataTransformation:
             return(
                 train_arr,
                 test_arr,
-                self.data_transformation_config.preprocessing_obj_file_path
+                
             )
 
         except Exception as e:
