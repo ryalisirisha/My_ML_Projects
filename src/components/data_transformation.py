@@ -6,6 +6,7 @@ import numpy as np
 
 from src.exception import CustomException
 from src.logger import logging 
+from src.utils import save_object
 
 from sklearn.preprocessing import OneHotEncoder,StandardScaler
 from sklearn.compose import ColumnTransformer
@@ -79,6 +80,13 @@ class DataTransformation:
             test_arr = np.c_[input_features_test_arr,np.array(target_feature_test_data)]
 
             logging.info('concatenated the input and target features for train and test data')
+
+            logging.info('Save Preprocessing Object')
+
+            save_object(
+                file_path=self.data_transformation_config.preprocessing_obj_file_path,
+                obj = preprocessing_obj
+            )
 
             return(
                 train_arr,
